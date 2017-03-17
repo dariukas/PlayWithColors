@@ -22,12 +22,14 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //run()
+        run()
         
-        var colours: [[Int]] = [[0, 0, 0], [0, 0, 0], [10, 10, 9]]
-        colours = replaceColor(colour: [0, 0, 0, 0], in: colours)
-        print(colours)
-        
+//        var colours: [[Int]] = [[0, 0, 0], [0, 0, 0], [10, 10, 9]]
+//        colours = replaceColor(colour: [0, 0, 0, 0], in: colours)
+//        print(colours)
+//            var counts = [1:2, 2:4, 5:1, 8:2, 9:0]
+
+//        print(counts)
     }
     
     override func didReceiveMemoryWarning() {
@@ -122,16 +124,17 @@ class ViewController: UIViewController {
                 colours.append(color)
             }
         }
-        print(colours)
+        //print(colours)
         
         
         //check for empty image
-        guard colours.count<1 else {
+        guard colours.count>1 else {
             return
         }
         
         if let colours1 = colours as? [[Int]] {
-            print("next: \(groupColors(colours1))")
+            print(findTheMainColours(colours: colours1))
+         //   print("next: \(groupColors(colours1))")
         }
     }
 
@@ -165,15 +168,20 @@ class ViewController: UIViewController {
         return colourArray.map {toColor($0)}
     }
     
-    func findTheMainColours(colours: [[Int]]) -> [UIColor : Int] {
+    func findTheMainColours(colours: [[Int]]) -> [(UIColor, Int)] {
         // Create dictionary to map value to count
         var counts = [UIColor : Int]()
         arraysToColors(colours).forEach { counts[$0] = (counts[$0] ?? 0) + 1 }
-        return counts.sorted(by: {$0.1 < $1.1}) as! [UIColor : Int]
+        return reorderDictionaryByValue(counts)
     }
     
-    
-    
+    func reorderDictionaryByValue(_ dictionary: [UIColor : Int]) -> [(UIColor, Int)] {
+        var result = [(UIColor, Int)]()
+        for (k,v) in (Array(dictionary).sorted {$0.1 > $1.1}) {
+            result.append((k, v))
+        }
+        return result
+    }
     
     //helper for analysis
     func groupColors(_ colours: [[Int]]) ->  [([Int], Int)] {

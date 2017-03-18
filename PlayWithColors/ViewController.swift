@@ -112,16 +112,14 @@ class ViewController: UIViewController {
         
         context.draw(cgImage, in: CGRect(x: 0.0, y: 0.0, width: Double(dimension), height: Double(dimension)))
         var colours: [Any] = []
+
+       // let colour: UIColor = UIColor(red: CGFloat(rgba[404])/255, green: CGFloat(rgba[405])/255, blue: CGFloat(rgba[406])/255, alpha: CGFloat(rgba[index+3])/255)
         
-        for index1 in 0...dimension {
-            for index2 in 0...dimension {
+        for index1 in 0..<dimension {
+            for index2 in 0..<dimension {
                 let index = 4*(index1*dimension + index2)
-                let r: Int = Int(rgba[index])
-                let g: Int = Int(rgba[index+1])
-                let b: Int = Int(rgba[index+2])
-                let alpha: Int = Int(rgba[index+3])
-                let color: [Int] = [r, g, b, alpha]
-                colours.append(color)
+                let colour: UIColor = UIColor(red: CGFloat(rgba[index])/255, green: CGFloat(rgba[index+1])/255, blue: CGFloat(rgba[index+2])/255, alpha: CGFloat(rgba[index+3])/255)
+                colours.append(colour)
             }
         }
         //print(colours)
@@ -132,46 +130,58 @@ class ViewController: UIViewController {
             return
         }
         
-        if let colours1 = colours as? [[Int]] {
-            print(findTheMainColours(colours: colours1))
-         //   print("next: \(groupColors(colours1))")
+        if var colours1 = colours as? [UIColor] {
+            //  print(findTheMainColours(colours: colours1))
+            //   print("next: \(groupColors(colours1))")
+            mergeSimilarColors(&colours1)
+            addLabels(findTheMainColours(colours: colours1))
         }
     }
-
-    //http://stackoverflow.com/questions/12069494/rgb-similar-color-approximation-algorithm
-    func isSimilarColors(firstColor: [Int], secondColor: [Int], with tolerance: Int = 10) -> Bool {
-        guard (firstColor.count != secondColor.count) else {
-            return false
+    
+    func addLabels(_ unit: [(UIColor, Int)]) {
+        let dh = view.frame.height/CGFloat(unit.count)
+        let size = CGSize(width: view.frame.width, height: dh)
+        
+        for index in 0..<unit.count {
+            let label = UILabel(frame: CGRect(origin: CGPoint(x: 0, y: CGFloat(index)*dh), size: size))
+            label.center.x = view.center.x
+            label.backgroundColor = unit[index].0
+            label.text = unit[index].1.description
+            label.textAlignment = NSTextAlignment.center
+            view.addSubview(label)
         }
-        let dr = firstColor[0] - secondColor[0]
-        let dg = firstColor[1] - secondColor[1]
-        let db = firstColor[2] - secondColor[2]
-        let distance = sqrt(Double(dr*dr+dg*dg+db*db)/3.0)
-        if (distance < Double(tolerance)) {
-            return true
+    }
+    
+    //http://stackoverflow.com/questions/12069494/rgb-similar-color-approximation-algorithm
+    func isSimilarColors(firstColor: UIColor, secondColor: UIColor, with tolerance: Double = 0.12) -> Bool {
+        if let firstColorComponents = firstColor.cgColor.components, let secondColorComponents = secondColor.cgColor.components {
+            let dr = firstColorComponents[0] - secondColorComponents[0]
+            let dg = firstColorComponents[1] - secondColorComponents[1]
+            let db = firstColorComponents[2] - secondColorComponents[2]
+            let distance = sqrt(Double(dr*dr+dg*dg+db*db)/3.0)
+            if (distance < tolerance) {
+                return true
+            }
         }
         return false
     }
     
-    func replaceColor(colour: [Int], in colours: [[Int]]) ->  [[Int]] {
+    func replaceColor(colour: UIColor, in colours: [UIColor]) ->  [UIColor] {
         return colours.map {isSimilarColors(firstColor: $0, secondColor: colour) ? colour  : $0}
     }
     
-    
-    func mergeSimilarColors(_ colours: [[Int]], with tolerance: Int) {
-        
-        
+    func mergeSimilarColors(_ colours: inout [UIColor], with tolerance: Int = 1) {
+        //var mergedColours = colours
+        for (colour, _) in findTheMainColours(colours: colours) {
+            colours = replaceColor(colour: colour, in: colours)
+        }
+        //print(findTheMainColours(colours: colours))
     }
     
-    func arraysToColors(_ colourArray: [[Int]]) -> [UIColor] {
-        func toColor(_ colourArray: [Int]) -> UIColor { return UIColor(red: CGFloat(colourArray[0])/255, green: CGFloat(colourArray[1])/255, blue: CGFloat(colourArray[2])/255, alpha: CGFloat(colourArray[3])) }
-        return colourArray.map {toColor($0)}
-    }
-    
-    func findTheMainColours(colours: [[Int]]) -> [(UIColor, Int)] {
+    func findTheMainColours(colours: [UIColor]) -> [(UIColor, Int)] {
         // Create dictionary to map value to count
         var counts = [UIColor : Int]()
-        arraysToColors(colours).forEach { counts[$0] = (counts[$0] ?? 0) + 1 }
+        colours.forEach { counts[$0] = (counts[$0] ?? 0) + 1 }
         return reorderDictionaryByValue(counts)
     }
     
@@ -198,7 +208,11 @@ class ViewController: UIViewController {
         }
         return groupedColors
     }
-    
-    
 
+}
+
+extension CGRect {
+    init(_ x:CGFloat, _ y:CGFloat, _ w:CGFloat, _ h:CGFloat) {
+        self.init(x:x, y:y, width:w, height:h)
+    }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A3235F261E7DC3DF008500B2 /* AdditionalMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3235F251E7DC3DF008500B2 /* AdditionalMethods.swift */; };
 		A35086BF1E78828200311A8E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35086BE1E78828200311A8E /* AppDelegate.swift */; };
 		A35086C11E78828200311A8E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35086C01E78828200311A8E /* ViewController.swift */; };
 		A35086C41E78828200311A8E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A35086C21E78828200311A8E /* Main.storyboard */; };
@@ -27,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A3235F251E7DC3DF008500B2 /* AdditionalMethods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdditionalMethods.swift; sourceTree = "<group>"; };
 		A35086BB1E78828200311A8E /* PlayWithColors.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlayWithColors.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A35086BE1E78828200311A8E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A35086C01E78828200311A8E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 			children = (
 				A35086BE1E78828200311A8E /* AppDelegate.swift */,
 				A35086C01E78828200311A8E /* ViewController.swift */,
+				A3235F251E7DC3DF008500B2 /* AdditionalMethods.swift */,
 				A3CE6B1C1E7ACFBB007209FE /* ColoursMatrix.swift */,
 				A35086C21E78828200311A8E /* Main.storyboard */,
 				A35086C51E78828200311A8E /* Assets.xcassets */,
@@ -205,6 +208,7 @@
 				A3CE6B1D1E7ACFBB007209FE /* ColoursMatrix.swift in Sources */,
 				A35086C11E78828200311A8E /* ViewController.swift in Sources */,
 				A35086BF1E78828200311A8E /* AppDelegate.swift in Sources */,
+				A3235F261E7DC3DF008500B2 /* AdditionalMethods.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

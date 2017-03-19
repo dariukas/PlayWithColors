@@ -216,24 +216,27 @@ class ViewController: UIViewController {
     
     func aroundPointsSet(_ point: Point) -> Set<Point> {
         var aroundPoints: Set<Point> = []
-        if point.column != 0 && point.row != 0 {
-            for index1 in -1...1 {
-                for index2 in -1...1 {
-                    aroundPoints.update(with: Point.init(point.column+index1, point.row+index2))
-                }
+        var i = -1, j = -1
+        if (point.column == 0) {
+            i = 0
+        }
+        if (point.row == 0) {
+            j = 0
+        }
+        
+        for index1 in i...1 {
+            for index2 in j...1 {
+                aroundPoints.update(with: Point.init(point.column+index1, point.row+index2))
             }
         }
+        aroundPoints.remove(at: aroundPoints.index(of: Point.init(point.column, point.row))!)
         return aroundPoints
     }
-
+    
     func findObjectPoints(_ thePoints: [Point]) -> Set<Point> {
         var allPoints = thePoints
         var objectPoints: Set<Point> = []
         //var allPoints = Set<Point>(points)
-        
-        let initialPoint = allPoints.first
-        let aroundInitialPoint = aroundPointsSet(initialPoint!)
-        let foundPointsAroundInitial = aroundInitialPoint.intersection(allPoints)
         
         func recursion (_ points: Set<Point>) {
             for point in points {
@@ -242,17 +245,22 @@ class ViewController: UIViewController {
                 let aroundPoint = aroundPointsSet(point)
                 let foundPointsAround = aroundPoint.intersection(allPoints)
                 if (foundPointsAround.count < 1) { //to escape the func forever
-                   recursion(foundPointsAround)
+                    recursion(foundPointsAround)
                 }
             }
         }
-        recursion(foundPointsAroundInitial)
+        
+        if let initialPoint = allPoints.first {
+            let aroundInitialPoint = aroundPointsSet(initialPoint)
+            let foundPointsAroundInitial = aroundInitialPoint.intersection(allPoints)
+            recursion(foundPointsAroundInitial)
+        }
         return objectPoints
     }
     
     func detect() {
         //find the coordinates
-        let colors = [(1, 1), (2, 1), (1, 2), (5, 5), (2, 2), (3, 1)]
+        let colors = [(0, 1), (1, 1), (1, 2), (5, 5), (2, 2), (3, 1)]
         
         var points: [Point] = []
         for (x, y) in colors {

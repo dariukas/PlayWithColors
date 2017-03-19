@@ -252,7 +252,7 @@ class ViewController: UIViewController {
     
     func detect() {
         //find the coordinates
-        let colors = [(0, 1), (1, 1), (1, 2), (5, 5), (2, 2), (3, 1)]
+        let colors = [(1, 1), (2, 1), (1, 2), (5, 5), (2, 2), (3, 1)]
         
         var points: [Point] = []
         for (x, y) in colors {
@@ -269,7 +269,9 @@ struct Point: Hashable {
     var row: Int
     
     init(_ column: Int, _ row: Int) {
-        self.init(column: column, row: row)
+        //self.init(column: column, row: row)
+        self.column = column
+        self.row = row
     }
 //        {
 //        set(row){

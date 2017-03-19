@@ -22,7 +22,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        run()
+      //  run()
+        detect()
         
 //        var colours: [[Int]] = [[0, 0, 0], [0, 0, 0], [10, 10, 9]]
 //        colours = replaceColor(colour: [0, 0, 0, 0], in: colours)
@@ -153,7 +154,7 @@ class ViewController: UIViewController {
     }
     
     //http://stackoverflow.com/questions/12069494/rgb-similar-color-approximation-algorithm
-    func isSimilarColors(firstColor: UIColor, secondColor: UIColor, with tolerance: Double = 0.12) -> Bool {
+    func isSimilarColors(firstColor: UIColor, secondColor: UIColor, with tolerance: Double = 0.16) -> Bool {
         if let firstColorComponents = firstColor.cgColor.components, let secondColorComponents = secondColor.cgColor.components {
             let dr = firstColorComponents[0] - secondColorComponents[0]
             let dg = firstColorComponents[1] - secondColorComponents[1]
@@ -172,8 +173,9 @@ class ViewController: UIViewController {
     
     func mergeSimilarColors(_ colours: inout [UIColor], with tolerance: Int = 1) {
         //var mergedColours = colours
-        for (colour, _) in findTheMainColours(colours: colours) {
+        for (colour, _) in findTheMainColours(colours: colours).reversed() {
             colours = replaceColor(colour: colour, in: colours)
+            print(findTheMainColours(colours: colours).first?.1)
         }
         //print(findTheMainColours(colours: colours))
     }
@@ -208,7 +210,83 @@ class ViewController: UIViewController {
         }
         return groupedColors
     }
+    
+    
+    //detection
+    
+    func aroundPointsSet(_ point: Point) -> Set<Point> {
+        var aroundPoints: Set<Point> = []
+        if point.column != 0 && point.row != 0 {
+            for index1 in -1...1 {
+                for index2 in -1...1 {
+                    aroundPoints.update(with: Point.init(point.column+index1, point.row+index2))
+                }
+            }
+        }
+        return aroundPoints
+    }
 
+    func findObjectPoints(_ thePoints: [Point]) -> Set<Point> {
+        var allPoints = thePoints
+        var objectPoints: Set<Point> = []
+        //var allPoints = Set<Point>(points)
+        
+        let initialPoint = allPoints.first
+        let aroundInitialPoint = aroundPointsSet(initialPoint!)
+        let foundPointsAroundInitial = aroundInitialPoint.intersection(allPoints)
+        
+        func recursion (_ points: Set<Point>) {
+            for point in points {
+                objectPoints.update(with: point)
+                allPoints.remove(at: allPoints.index(of: point)!)
+                let aroundPoint = aroundPointsSet(point)
+                let foundPointsAround = aroundPoint.intersection(allPoints)
+                if (foundPointsAround.count < 1) { //to escape the func forever
+                   recursion(foundPointsAround)
+                }
+            }
+        }
+        recursion(foundPointsAroundInitial)
+        return objectPoints
+    }
+    
+    func detect() {
+        //find the coordinates
+        let colors = [(0, 1), (1, 1), (1, 2), (5, 5), (2, 2), (3, 1)]
+        
+        var points: [Point] = []
+        for (x, y) in colors {
+            let point = Point.init(x, y)
+            points.append(point)
+        }
+        print(findObjectPoints(points))
+        //find max and min of x y to make rectangle
+    }
+}
+
+struct Point: Hashable {
+    var column: Int
+    var row: Int
+    
+    init(_ column: Int, _ row: Int) {
+        self.init(column: column, row: row)
+    }
+//        {
+//        set(row){
+//            row = row
+//        }
+//        get{
+//            return row
+//        }
+//    }
+    
+    var hashValue: Int {
+        return column.hashValue+row.hashValue
+    }
+    
+    static func == (lhs: Point, rhs: Point) -> Bool {
+        return lhs.column == rhs.column && lhs.row == rhs.row
+    }
 }
 
 extension CGRect {
@@ -216,3 +294,14 @@ extension CGRect {
         self.init(x:x, y:y, width:w, height:h)
     }
 }
+
+//extension CGPoint: Hashable {
+//    public var hashValue: Int {
+//        return self.x.hashValue << sizeof(CGFloat) ^ self.y.hashValue
+//    }
+//}
+//
+//// Hashable requires Equatable, so define the equality function for CGPoints.
+//public func ==(lhs: CGPoint, rhs: CGPoint) -> Bool {
+//    return lhs.equalTo(rhs)
+//}

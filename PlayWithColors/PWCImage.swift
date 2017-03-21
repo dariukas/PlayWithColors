@@ -10,6 +10,8 @@ import UIKit
 
 class PWCImage: UIImage {
     
+    var dimension: Int = 100
+    
     func cgImage() -> CGImage? {
         if let ciImage = CIImage(image: self), let cgImage = CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent) {
             return cgImage
@@ -30,7 +32,7 @@ class PWCImage: UIImage {
     }
     
     //find all colors of UIImage
-    func findColors(dimension: Int = 100) -> [UIColor] {
+    func findColors() -> [UIColor] {
         let rgba = getColorsData(dimension: dimension)
         var colours: [Any] = []
         for index1 in 0..<dimension {
@@ -43,8 +45,12 @@ class PWCImage: UIImage {
         return colours as! [UIColor]
     }
     
+    func colours() -> PWCColors {
+        return PWCColors.init(findColors())
+    }
+    
     //convert image colours data to the matrix
-    func imageColorsToImageMatrix(colours: [UIColor], dimension: Int = 100) -> PWCImageMatrix {
+    func imageColorsToImageMatrix(colours: [UIColor]) -> PWCImageMatrix {
         return PWCImageMatrix.init(colours, rows: dimension, columns: dimension)
     }
     

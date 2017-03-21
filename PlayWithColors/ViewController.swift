@@ -174,22 +174,14 @@ class ViewController: UIViewController {
         }
     }
     
-
-        
-    
     //detection
     func aroundPointsSet(_ point: Point, in range: Range<Int> = 0..<100) -> Set<Point> {
         var aroundPoints: Set<Point> = []
-        var i = -1, j = -1
-        if (point.column == 0) {
-            i = 0
-        }
-        if (point.row == 0) {
-            j = 0
-        }
+        //the validation of row=column=0 or dimension not necessary
+        //since the data matrices have no that members like (-1, -1), and the substract set will omit these values
         
-        for index1 in -i...1 {
-            for index2 in j...1 {
+        for index1 in -1...1 {
+            for index2 in -1...1 {
                 aroundPoints.update(with: Point.init(point.column+index1, point.row+index2))
             }
         }

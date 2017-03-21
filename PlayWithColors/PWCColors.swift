@@ -10,20 +10,37 @@ import UIKit
 
 class PWCColors: NSObject {
     
-    //helper for analysis
-    func groupColors(_ colours: [UIColor]) ->  [(UIColor, Int)] {
-        var groupedColors: [(UIColor, Int)] = []
-        var counts: (UIColor, Int) = (colours.first!, 0)
-        colours.forEach {
-            if (counts.0==$0) {
-                counts.1  = (counts.1) + 1
-            } else {
-                groupedColors.append(counts)
-                counts.0 = $0
-                counts.1 = 1
-            }
+    var colours: [UIColor]
+    
+    init(_ colours: [UIColor]) {
+        self.colours = colours
+    }
+    
+    //the colours are changed
+    func mergeSimilarColors(tolerance: Int = 1) {
+        for (colour, _) in sortColoursByFrequency().reversed() {
+            self.colours = replaceSimilarColor(colour: colour, in: self.colours)
         }
-        return groupedColors
+    }
+    
+    //the colors are changed temporarily
+    func afterMergeSimilarColors(tolerance: Int = 1) -> [UIColor] {
+        var mergedColours: [UIColor] = self.colours
+        for (colour, _) in sortColoursByFrequency().reversed() {
+            mergedColours = replaceSimilarColor(colour: colour, in: mergedColours)
+        }
+        return mergedColours
+    }
+    
+//    func mergeSimilarColors(_ colours: inout [UIColor], with tolerance: Int = 1) {
+//        for (colour, _) in sortColoursByFrequency().reversed() {
+//            colours = replaceSimilarColor(colour: colour, in: colours)
+//            print(sortColoursByFrequency().first?.1)
+//        }
+//    }
+    
+    func replaceSimilarColor(colour: UIColor, in colours: [UIColor]) ->  [UIColor] {
+        return colours.map {isSimilarColors(firstColor: $0, secondColor: colour) ? colour  : $0}
     }
     
     //http://stackoverflow.com/questions/12069494/rgb-similar-color-approximation-algorithm
@@ -40,23 +57,10 @@ class PWCColors: NSObject {
         return false
     }
     
-    func replaceColor(colour: UIColor, in colours: [UIColor]) ->  [UIColor] {
-        return colours.map {isSimilarColors(firstColor: $0, secondColor: colour) ? colour  : $0}
-    }
-    
-    func mergeSimilarColors(_ colours: inout [UIColor], with tolerance: Int = 1) {
-        //var mergedColours = colours
-        for (colour, _) in findTheMainColours(colours: colours).reversed() {
-            colours = replaceColor(colour: colour, in: colours)
-            print(findTheMainColours(colours: colours).first?.1)
-        }
-        //print(findTheMainColours(colours: colours))
-    }
-    
-    func findTheMainColours(colours: [UIColor]) -> [(UIColor, Int)] {
+    func sortColoursByFrequency() -> [(UIColor, Int)] {
         // Create dictionary to map value to count
         var counts = [UIColor : Int]()
-        colours.forEach { counts[$0] = (counts[$0] ?? 0) + 1 }
+        self.colours.forEach { counts[$0] = (counts[$0] ?? 0) + 1 }
         return reorderDictionaryByValue(counts)
     }
     
@@ -67,6 +71,20 @@ class PWCColors: NSObject {
         }
         return result
     }
+    // MARK: Helpers
     
-
+    func groupColors(_ colours: [UIColor]) ->  [(UIColor, Int)] {
+        var groupedColors: [(UIColor, Int)] = []
+        var counts: (UIColor, Int) = (colours.first!, 0)
+        colours.forEach {
+            if (counts.0==$0) {
+                counts.1  = (counts.1) + 1
+            } else {
+                groupedColors.append(counts)
+                counts.0 = $0
+                counts.1 = 1
+            }
+        }
+        return groupedColors
+    }
 }

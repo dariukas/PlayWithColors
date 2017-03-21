@@ -10,6 +10,14 @@ import UIKit
 
 class PWCColorObjectDetector: NSObject {
     
+    func detect() {
+        //find the coordinates of the color HSL
+        let colors = [(0, 1), (1, 1), (1, 2), (5, 5), (2, 2), (3, 1), (2, 3)]
+        let points: [Point] = matrixToPoints(colors)
+        //print(detectColorObjectPoints(points))
+        print(boundingBox(detectColorObjectPoints(points)))
+    }
+    
     internal func matrixToPoints(_ detectedPoints: [(Int, Int)]) -> [Point] {
         var points: [Point] = []
         for (x, y) in detectedPoints {
@@ -27,53 +35,6 @@ class PWCColorObjectDetector: NSObject {
             return CGRect(x:minX, y: minY, width: maxX-minX, height: maxY-minY)
         }
         return CGRect.zero
-    }
-    
-    // MARK: Using Another Algorithm
-    
-    internal func close(lhs: Point, rhs: Point) -> Bool {
-        return lhs.column == rhs.column+1 && lhs.row == rhs.row+1
-    }
-
-    
-    internal func detectColorObjectPoints2(_ thePoints: [Point]) -> Set<Point> {
-
-        var allColorPoints = thePoints
-        let seedPoint = allColorPoints.first
-        
-        for point in allColorPoints {
-        
-            if (lhs.column == rhs.column && lhs.row == rhs.row) {
-            
-            
-            }
-        
-        }
-        
-        
-        var colorObjectPoints: Set<Point> = []
-        
-        func recursion (_ points: Set<Point>) {
-            for point in points {
-                colorObjectPoints.update(with: point)
-                allColorPoints.remove(at: allColorPoints.index(of: point)!)
-            }
-            
-            for point in points {
-                let aroundPointsSet = findAroundPoints(point)
-                let colorAroundPointSet = aroundPointsSet.intersection(allColorPoints)
-                if (colorAroundPointSet.count > 0) { //to escape the func forever
-                    recursion(colorAroundPointSet)
-                }
-            }
-        }
-        
-        if let initialPoint = allColorPoints.first {
-            let aroundInitialPoint = findAroundPoints(initialPoint)
-            let colorAroundInitialPointSet = aroundInitialPoint.intersection(allColorPoints)
-            recursion(colorAroundInitialPointSet)
-        }
-        return colorObjectPoints
     }
     
     // MARK: Helpers
@@ -106,7 +67,6 @@ class PWCColorObjectDetector: NSObject {
         return colorObjectPoints
     }
     
-    
     internal func findAroundPoints(_ point: Point) -> Set<Point> {
         var aroundPoints: Set<Point> = []
         
@@ -122,12 +82,39 @@ class PWCColorObjectDetector: NSObject {
         return aroundPoints
     }
     
-    func detect() {
-        //find the coordinates of the color HSL
-        let colors = [(0, 1), (1, 1), (1, 2), (5, 5), (2, 2), (3, 1), (2, 3)]
-        let points: [Point] = matrixToPoints(colors)
-        //print(detectColorObjectPoints(points))
-         print(boundingBox(detectColorObjectPoints(points)))
+    // MARK: Using Alternative Algorithm
+    
+    internal func areNeighbors (lhs: Point, rhs: Point) -> Bool {
+        return abs((lhs.column - rhs.column)*(lhs.row - rhs.row)) <= 1
+    }
+    
+    internal func detectColorObjectPoints2(_ thePoints: [Point]) -> Set<Point> {
+        
+        var allColorPoints = thePoints
+        var colorObjectPoints: Set<Point> = []
+        let seedPoint = allColorPoints.first
+        
+        func recursion (_ point: Point) -> Set<Point>  {
+            var neighborPoints: Set<Point> = []
+            for colorPoint in allColorPoints {
+                if (colorPoint.isNeighborTo(seedPoint!)){
+                    neighborPoints.update(with: point)
+                }
+            }
+            return neighborPoints
+        }
+        
+        
+        for neighborPoint in neighborPoints {
+            
+            recursion(neighborPoint)
+            
+            
+        }
+        
+        
+        
+        return colorObjectPoints
     }
 }
 
@@ -155,5 +142,9 @@ struct Point: Hashable {
     
     static func == (lhs: Point, rhs: Point) -> Bool {
         return lhs.column == rhs.column && lhs.row == rhs.row
+    }
+    
+    func isNeighborTo(_ point: Point) -> Bool {
+         return abs((self.column - point.column)*(self.row - point.row)) <= 1
     }
 }

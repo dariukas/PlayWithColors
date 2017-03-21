@@ -49,8 +49,7 @@ class PWCColors: NSObject {
             let dr = firstColorComponents[0] - secondColorComponents[0]
             let dg = firstColorComponents[1] - secondColorComponents[1]
             let db = firstColorComponents[2] - secondColorComponents[2]
-            let distance = sqrt(Double(dr*dr+dg*dg+db*db)/3.0)
-            return distance < tolerance
+            return sqrt(Double(dr*dr+dg*dg+db*db)/3.0) < tolerance
         }
         return false
     }

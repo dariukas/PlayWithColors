@@ -14,8 +14,23 @@ class PWCColorObjectDetector: NSObject {
         //find the coordinates of the color HSL
         let colors = [(0, 1), (1, 1), (1, 2), (5, 5), (2, 2), (3, 1), (2, 3)]
         let points: [Point] = matrixToPoints(colors)
+        findRedColor()
+        //print(detectColorObjectPointsAlternative(points))
         //print(detectColorObjectPoints(points))
-        print(boundingBox(detectColorObjectPoints(points)))
+        //print(boundingBox(detectColorObjectPoints(points)))
+    }
+    
+    func findRedColor() {
+        
+        let color = UIColor.blue
+        var hsba: (h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat) = (0, 0, 0, 0)
+        color.getHue(&(hsba.h), saturation: &(hsba.s), brightness: &(hsba.b), alpha: &(hsba.a))
+        
+        print(hsba.h)
+        
+        //using matrix
+        //        var redColour: [UIColor] =
+        
     }
     
     internal func matrixToPoints(_ detectedPoints: [(Int, Int)]) -> [Point] {
@@ -47,7 +62,9 @@ class PWCColorObjectDetector: NSObject {
         func recursion (_ points: Set<Point>) {
             for point in points {
                 colorObjectPoints.update(with: point)
-                allColorPoints.remove(at: allColorPoints.index(of: point)!)
+                if let indexOfColorPoint = allColorPoints.index(of: point){
+                    allColorPoints.remove(at: indexOfColorPoint)
+                }
             }
             
             for point in points {
@@ -84,38 +101,31 @@ class PWCColorObjectDetector: NSObject {
     
     // MARK: Using Alternative Algorithm
     
+    internal func detectColorObjectPointsAlternative(_ thePoints: [Point]) -> Set<Point> {
+        var allColorPoints = thePoints
+        var colorObjectPoints: Set<Point> = []
+        let seedPoint = allColorPoints.first! //could be another for the next object
+        
+        func recursion (_ point: Point) {
+            if let index = allColorPoints.index(of: point){
+                allColorPoints.remove(at: index)
+                colorObjectPoints.update(with: point)
+            }
+            for colorPoint in allColorPoints {
+                if (colorPoint.isNeighborTo(point)){
+                        recursion(colorPoint)
+                }
+            }
+        }
+        recursion(seedPoint)
+        return colorObjectPoints
+    }
+    
+    //not used
     internal func areNeighbors (lhs: Point, rhs: Point) -> Bool {
         return abs((lhs.column - rhs.column)*(lhs.row - rhs.row)) <= 1
     }
     
-    internal func detectColorObjectPoints2(_ thePoints: [Point]) -> Set<Point> {
-        
-        var allColorPoints = thePoints
-        var colorObjectPoints: Set<Point> = []
-        let seedPoint = allColorPoints.first
-        
-        func recursion (_ point: Point) -> Set<Point>  {
-            var neighborPoints: Set<Point> = []
-            for colorPoint in allColorPoints {
-                if (colorPoint.isNeighborTo(seedPoint!)){
-                    neighborPoints.update(with: point)
-                }
-            }
-            return neighborPoints
-        }
-        
-        
-        for neighborPoint in neighborPoints {
-            
-            recursion(neighborPoint)
-            
-            
-        }
-        
-        
-        
-        return colorObjectPoints
-    }
 }
 
 struct Point: Hashable {

@@ -16,6 +16,19 @@ class PWCColors: NSObject {
         self.colours = colours
     }
     
+    func findRedColor() {
+        
+        let color = UIColor.red
+        var hsba: (h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat) = (0, 0, 0, 0)
+        color.getHue(&(hsba.h), saturation: &(hsba.s), brightness: &(hsba.b), alpha: &(hsba.a))
+        
+        print(hsba)
+        
+        //using matrix
+//        var redColour: [UIColor] =
+    
+    }
+    
     //the colours are changed
     func mergeSimilarColors(tolerance: Int = 1) {
         for (colour, _) in sortColoursByFrequency().reversed() {
@@ -84,5 +97,14 @@ class PWCColors: NSObject {
             }
         }
         return groupedColors
+    }
+}
+
+extension UIColor {
+    var hsba: (h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat) {
+        var hsba: (h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat) = (0, 0, 0, 0)
+        self.getHue(&(hsba.h), saturation: &(hsba.s), brightness: &(hsba.b), alpha: &(hsba.a))
+        print(hsba)
+        return hsba
     }
 }

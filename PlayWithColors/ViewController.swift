@@ -20,10 +20,13 @@ class ViewController: UIViewController {
     //var context: CGContext
     let context = CIContext(options: nil)
     
+    @IBOutlet weak var imgView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-      //  run()
-        detect()
+
+        run()
+       // detect()
         
 //        var colours: [[Int]] = [[0, 0, 0], [0, 0, 0], [10, 10, 9]]
 //        colours = replaceColor(colour: [0, 0, 0, 0], in: colours)
@@ -64,19 +67,17 @@ class ViewController: UIViewController {
     }
     
     func runMain(_ data: Data?) {
-        let img = UIImage(data: data!)
-        let ciImage = CIImage(image: img!)
-        let cgImage = convertCIImageToCGImage(inputImage: ciImage!)
-        //let color: UIColor = averageColor(cgImage: cgImage!)
-        //print(color)
-        //self.view.backgroundColor = color
-        findTheColors(cgImage: cgImage!)
+        if let img = UIImage(data: data!), let cgImage = cgImageFromUIImage(img) {
+            //let color: UIColor = averageColor(cgImage: cgImage!)
+            //print(color)
+            //self.view.backgroundColor = color
+            findTheColors(cgImage: cgImage)
+        }
     }
-    
-    func convertCIImageToCGImage(inputImage: CIImage) -> CGImage! {
-        let context = CIContext(options: nil)
-        if context != nil {
-            return context.createCGImage(inputImage, from: inputImage.extent)
+
+    func cgImageFromUIImage(_ uiImage: UIImage) -> CGImage? {
+        if let ciImage = CIImage(image: uiImage), let cgImage = CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent) {
+            return cgImage
         }
         return nil
     }
@@ -88,7 +89,7 @@ class ViewController: UIViewController {
         let info = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
         let context: CGContext = CGContext(data: rgba, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: info.rawValue)!
         
-        context.draw(cgImage, in: CGRect(x: 0.0,y: 0.0,width: 1.0,height: 1.0))
+        context.draw(cgImage, in: CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0))
         //CGContextDrawImage(context, CGRectMake(0, 0, 1, 1), cgImage)
         
         if rgba[3] > 0 {
@@ -131,14 +132,34 @@ class ViewController: UIViewController {
             return
         }
         
-        if var colours1 = colours as? [UIColor] {
-            //  print(findTheMainColours(colours: colours1))
-            //   print("next: \(groupColors(colours1))")
-            mergeSimilarColors(&colours1)
-            addLabels(findTheMainColours(colours: colours1))
-        }
+//        if var colours1 = colours as? [UIColor] {
+//            //  print(findTheMainColours(colours: colours1))
+//            //   print("next: \(groupColors(colours1))")
+//            mergeSimilarColors(&colours1)
+//            addLabels(findTheMainColours(colours: colours1))
+//        }
+        
+        draw(UIImage(cgImage: cgImage), with: CGSize(width: dimension, height: dimension))
     }
     
+    
+    func draw(_ image: UIImage, with size: CGSize) {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        if let context = UIGraphicsGetCurrentContext() {
+            //image.draw(at: CGPoint.zero)
+            context.draw(cgImageFromUIImage(image)!, in: CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0))
+            let rectangle = CGRect(x: 0, y: 0, width: 20, height: 20)
+            context.setStrokeColor(UIColor.black.cgColor)
+            context.setLineWidth(2)
+            context.addRect(rectangle)
+            context.drawPath(using: .stroke)
+        }
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        imgView.image = newImage
+        //view.setNeedsDisplay()
+    }
+
     func addLabels(_ unit: [(UIColor, Int)]) {
         let dh = view.frame.height/CGFloat(unit.count)
         let size = CGSize(width: view.frame.width, height: dh)
@@ -153,68 +174,11 @@ class ViewController: UIViewController {
         }
     }
     
-    //http://stackoverflow.com/questions/12069494/rgb-similar-color-approximation-algorithm
-    func isSimilarColors(firstColor: UIColor, secondColor: UIColor, with tolerance: Double = 0.16) -> Bool {
-        if let firstColorComponents = firstColor.cgColor.components, let secondColorComponents = secondColor.cgColor.components {
-            let dr = firstColorComponents[0] - secondColorComponents[0]
-            let dg = firstColorComponents[1] - secondColorComponents[1]
-            let db = firstColorComponents[2] - secondColorComponents[2]
-            let distance = sqrt(Double(dr*dr+dg*dg+db*db)/3.0)
-            if (distance < tolerance) {
-                return true
-            }
-        }
-        return false
-    }
-    
-    func replaceColor(colour: UIColor, in colours: [UIColor]) ->  [UIColor] {
-        return colours.map {isSimilarColors(firstColor: $0, secondColor: colour) ? colour  : $0}
-    }
-    
-    func mergeSimilarColors(_ colours: inout [UIColor], with tolerance: Int = 1) {
-        //var mergedColours = colours
-        for (colour, _) in findTheMainColours(colours: colours).reversed() {
-            colours = replaceColor(colour: colour, in: colours)
-            print(findTheMainColours(colours: colours).first?.1)
-        }
-        //print(findTheMainColours(colours: colours))
-    }
-    
-    func findTheMainColours(colours: [UIColor]) -> [(UIColor, Int)] {
-        // Create dictionary to map value to count
-        var counts = [UIColor : Int]()
-        colours.forEach { counts[$0] = (counts[$0] ?? 0) + 1 }
-        return reorderDictionaryByValue(counts)
-    }
-    
-    func reorderDictionaryByValue(_ dictionary: [UIColor : Int]) -> [(UIColor, Int)] {
-        var result = [(UIColor, Int)]()
-        for (k,v) in (Array(dictionary).sorted {$0.1 > $1.1}) {
-            result.append((k, v))
-        }
-        return result
-    }
-    
-    //helper for analysis
-    func groupColors(_ colours: [[Int]]) ->  [([Int], Int)] {
-        var groupedColors: [([Int], Int)] = []
-        var counts: ([Int], Int) = (colours.first!, 0)
-        colours.forEach {
-            if (counts.0==$0) {
-                counts.1  = (counts.1) + 1
-            } else {
-                groupedColors.append(counts)
-                counts.0 = $0
-                counts.1 = 1
-            }
-        }
-        return groupedColors
-    }
-    
+
+        
     
     //detection
-    
-    func aroundPointsSet(_ point: Point) -> Set<Point> {
+    func aroundPointsSet(_ point: Point, in range: Range<Int> = 0..<100) -> Set<Point> {
         var aroundPoints: Set<Point> = []
         var i = -1, j = -1
         if (point.column == 0) {
@@ -224,7 +188,7 @@ class ViewController: UIViewController {
             j = 0
         }
         
-        for index1 in i...1 {
+        for index1 in -i...1 {
             for index2 in j...1 {
                 aroundPoints.update(with: Point.init(point.column+index1, point.row+index2))
             }

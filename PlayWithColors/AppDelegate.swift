@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  PlayWithColors
 //
-//  Created by Kristina Šlekytė on 14/03/2017.
+//  Created by Darius Miliauskas on 14/03/2017.
 //  Copyright © 2017 Darius Miliauskas. All rights reserved.
 //
 

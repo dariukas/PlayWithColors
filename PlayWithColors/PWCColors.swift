@@ -39,8 +39,8 @@ class PWCColors: NSObject {
 //        }
 //    }
     
-    func replaceSimilarColor(colour: UIColor, in colours: [UIColor]) ->  [UIColor] {
-        return colours.map {isSimilarColors(firstColor: $0, secondColor: colour) ? colour  : $0}
+    internal func replaceSimilarColor(colour: UIColor, in colours: [UIColor]) ->  [UIColor] {
+        return colours.map{isSimilarColors(firstColor: $0, secondColor: colour) ? colour  : $0}
     }
     
     //http://stackoverflow.com/questions/12069494/rgb-similar-color-approximation-algorithm
@@ -50,9 +50,7 @@ class PWCColors: NSObject {
             let dg = firstColorComponents[1] - secondColorComponents[1]
             let db = firstColorComponents[2] - secondColorComponents[2]
             let distance = sqrt(Double(dr*dr+dg*dg+db*db)/3.0)
-            if (distance < tolerance) {
-                return true
-            }
+            return distance < tolerance
         }
         return false
     }
@@ -64,13 +62,14 @@ class PWCColors: NSObject {
         return reorderDictionaryByValue(counts)
     }
     
-    func reorderDictionaryByValue(_ dictionary: [UIColor : Int]) -> [(UIColor, Int)] {
+    internal func reorderDictionaryByValue(_ dictionary: [UIColor : Int]) -> [(UIColor, Int)] {
         var result = [(UIColor, Int)]()
         for (k,v) in (Array(dictionary).sorted {$0.1 > $1.1}) {
             result.append((k, v))
         }
         return result
     }
+    
     // MARK: Helpers
     
     func groupColors(_ colours: [UIColor]) ->  [(UIColor, Int)] {

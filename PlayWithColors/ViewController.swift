@@ -25,8 +25,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        run()
-       // detect()
+        //run()
+        let a: PWCColorObjectDetector =  PWCColorObjectDetector()
+        
+        a.detect()
         
 //        var colours: [[Int]] = [[0, 0, 0], [0, 0, 0], [10, 10, 9]]
 //        colours = replaceColor(colour: [0, 0, 0, 0], in: colours)
@@ -133,9 +135,6 @@ class ViewController: UIViewController {
         }
         
 //        if var colours1 = colours as? [UIColor] {
-//            //  print(findTheMainColours(colours: colours1))
-//            //   print("next: \(groupColors(colours1))")
-//            mergeSimilarColors(&colours1)
 //            addLabels(findTheMainColours(colours: colours1))
 //        }
         
@@ -172,86 +171,6 @@ class ViewController: UIViewController {
             label.textAlignment = NSTextAlignment.center
             view.addSubview(label)
         }
-    }
-    
-    //detection
-    func aroundPointsSet(_ point: Point, in range: Range<Int> = 0..<100) -> Set<Point> {
-        var aroundPoints: Set<Point> = []
-        //the validation of row=column=0 or dimension not necessary
-        //since the data matrices have no that members like (-1, -1), and the substract set will omit these values
-        
-        for index1 in -1...1 {
-            for index2 in -1...1 {
-                aroundPoints.update(with: Point.init(point.column+index1, point.row+index2))
-            }
-        }
-        aroundPoints.remove(at: aroundPoints.index(of: Point.init(point.column, point.row))!)
-        return aroundPoints
-    }
-    
-    func findObjectPoints(_ thePoints: [Point]) -> Set<Point> {
-        var allPoints = thePoints
-        var objectPoints: Set<Point> = []
-        //var allPoints = Set<Point>(points)
-        
-        func recursion (_ points: Set<Point>) {
-            for point in points {
-                objectPoints.update(with: point)
-                allPoints.remove(at: allPoints.index(of: point)!)
-                let aroundPoint = aroundPointsSet(point)
-                let foundPointsAround = aroundPoint.intersection(allPoints)
-                if (foundPointsAround.count < 1) { //to escape the func forever
-                    recursion(foundPointsAround)
-                }
-            }
-        }
-        
-        if let initialPoint = allPoints.first {
-            let aroundInitialPoint = aroundPointsSet(initialPoint)
-            let foundPointsAroundInitial = aroundInitialPoint.intersection(allPoints)
-            recursion(foundPointsAroundInitial)
-        }
-        return objectPoints
-    }
-    
-    func detect() {
-        //find the coordinates
-        let colors = [(0, 1), (1, 1), (1, 2), (5, 5), (2, 2), (3, 1)]
-        
-        var points: [Point] = []
-        for (x, y) in colors {
-            let point = Point.init(x, y)
-            points.append(point)
-        }
-        print(findObjectPoints(points))
-        //find max and min of x y to make rectangle
-    }
-}
-
-struct Point: Hashable {
-    var column: Int
-    var row: Int
-    
-    init(_ column: Int, _ row: Int) {
-        //self.init(column: column, row: row)
-        self.column = column
-        self.row = row
-    }
-//        {
-//        set(row){
-//            row = row
-//        }
-//        get{
-//            return row
-//        }
-//    }
-    
-    var hashValue: Int {
-        return column.hashValue+row.hashValue
-    }
-    
-    static func == (lhs: Point, rhs: Point) -> Bool {
-        return lhs.column == rhs.column && lhs.row == rhs.row
     }
 }
 

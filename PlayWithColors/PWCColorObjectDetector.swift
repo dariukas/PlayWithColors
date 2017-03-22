@@ -10,28 +10,14 @@ import UIKit
 
 class PWCColorObjectDetector: NSObject {
     
-    func detect() {
-        //find the coordinates of the color HSL
-        let colors = [(0, 1), (1, 1), (1, 2), (5, 5), (2, 2), (3, 1), (2, 3)]
-        let points: [Point] = matrixToPoints(colors)
-        findRedColor()
+    func detect(_ color: Color, _ imageMatrix: PWCImageMatrix) -> CGRect {
+//        let colors = [(0, 1), (1, 1), (1, 2), (5, 5), (2, 2), (3, 1), (2, 3)]
+//        let points: [Point] = matrixToPoints(colors)
         //print(detectColorObjectPointsAlternative(points))
         //print(detectColorObjectPoints(points))
-        //print(boundingBox(detectColorObjectPoints(points)))
-    }
-    
-    func findRedColor() {
-        
-        let color = UIColor.blue
-        var hsba: (h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat) = (0, 0, 0, 0)
-        color.getHue(&(hsba.h), saturation: &(hsba.s), brightness: &(hsba.b), alpha: &(hsba.a))
-        
-        print(hsba.h)
-        
-        
-        //using matrix
-        //        var redColour: [UIColor] =
-        
+        let pwcColor: PWCColor = PWCColor()
+        let points = pwcColor.findColorPoints(color, in: imageMatrix)
+        return boundingBox(detectColorObjectPoints(matrixToPoints(points)))
     }
     
     internal func matrixToPoints(_ detectedPoints: [(Int, Int)]) -> [Point] {

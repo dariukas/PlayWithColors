@@ -15,6 +15,7 @@
 		A35086C61E78828200311A8E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A35086C51E78828200311A8E /* Assets.xcassets */; };
 		A35086C91E78828200311A8E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A35086C71E78828200311A8E /* LaunchScreen.storyboard */; };
 		A35086D41E78828200311A8E /* PlayWithColorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35086D31E78828200311A8E /* PlayWithColorsTests.swift */; };
+		A35BAC971E83372D004B9310 /* PWCColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35BAC961E83372D004B9310 /* PWCColor.swift */; };
 		A3CE6B1D1E7ACFBB007209FE /* ColoursMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CE6B1C1E7ACFBB007209FE /* ColoursMatrix.swift */; };
 		A3D8A75A1E81534900EDDD04 /* PWCColorObjectDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D8A7591E81534900EDDD04 /* PWCColorObjectDetector.swift */; };
 		A3E99C371E80742D0001DFAA /* MyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E99C361E80742D0001DFAA /* MyView.swift */; };
@@ -46,6 +47,7 @@
 		A35086CF1E78828200311A8E /* PlayWithColorsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlayWithColorsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A35086D31E78828200311A8E /* PlayWithColorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayWithColorsTests.swift; sourceTree = "<group>"; };
 		A35086D51E78828200311A8E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A35BAC961E83372D004B9310 /* PWCColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWCColor.swift; sourceTree = "<group>"; };
 		A3CE6B1C1E7ACFBB007209FE /* ColoursMatrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColoursMatrix.swift; sourceTree = "<group>"; };
 		A3D8A7591E81534900EDDD04 /* PWCColorObjectDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWCColorObjectDetector.swift; sourceTree = "<group>"; };
 		A3E99C361E80742D0001DFAA /* MyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyView.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				A3E99C361E80742D0001DFAA /* MyView.swift */,
 				A3E99C381E8097D80001DFAA /* PWCImage.swift */,
 				A3E99C3C1E80A6520001DFAA /* PWCColors.swift */,
+				A35BAC961E83372D004B9310 /* PWCColor.swift */,
 				A3E99C3A1E80A1870001DFAA /* PWCImageMatrix.swift */,
 				A3235F251E7DC3DF008500B2 /* AdditionalMethods.swift */,
 				A3CE6B1C1E7ACFBB007209FE /* ColoursMatrix.swift */,
@@ -227,6 +230,7 @@
 				A3E99C3B1E80A1870001DFAA /* PWCImageMatrix.swift in Sources */,
 				A3CE6B1D1E7ACFBB007209FE /* ColoursMatrix.swift in Sources */,
 				A3D8A75A1E81534900EDDD04 /* PWCColorObjectDetector.swift in Sources */,
+				A35BAC971E83372D004B9310 /* PWCColor.swift in Sources */,
 				A3E99C391E8097D80001DFAA /* PWCImage.swift in Sources */,
 				A35086C11E78828200311A8E /* ViewController.swift in Sources */,
 				A3E99C3D1E80A6520001DFAA /* PWCColors.swift in Sources */,

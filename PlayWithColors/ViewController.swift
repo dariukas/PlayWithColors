@@ -70,7 +70,11 @@ class ViewController: UIViewController {
     func runMain(_ data: Data?) {
         if let img = PWCImage(data: data!) {
             //self.view.backgroundColor = color
-           print(img.imageToImageMatrix())
+            let imageMatrix: PWCImageMatrix = img.imageToImageMatrix()
+
+            let detector: PWCColorObjectDetector =  PWCColorObjectDetector()
+            let boundingBox: CGRect = detector.detect(.Yellow, imageMatrix)
+            print(boundingBox)
             //draw(UIImage(cgImage: cgImage), with: CGSize(width: dimension, height: dimension))
         }
     }

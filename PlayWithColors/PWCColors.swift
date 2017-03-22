@@ -15,47 +15,6 @@ class PWCColors: NSObject {
     init(_ colours: [UIColor]) {
         self.colours = colours
     }
-
-    func findColor(_ color: Color, in matrix: PWCImageMatrix) {
-        
-        
-//        for matrix[i, j] in matrix {
-//        
-//        
-//        
-//        }
-        
-        let a : UIColor = matrix[1, 1]
-        
-        if (getHueFromUIColor(a) ~= hueRangeFromColor(color) {
-            
-            
-        }
-    }
-    
-    func getHueFromUIColor(_ color: UIColor) -> CGFloat {
-        var hsba: (h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat) = (0, 0, 0, 0)
-        color.getHue(&(hsba.h), saturation: &(hsba.s), brightness: &(hsba.b), alpha: &(hsba.a))
-        return hsba.h
-    }
-    
-    //http://www.workwithcolor.com/cyan-blue-color-hue-range-01.htm
-    func hueRangeFromColor(_ color: Color) -> ClosedRange<CGFloat> {
-        switch color {
-        case .Red:
-            return 355...360
-        case .Orange:
-            return 21...50
-        case .Yellow:
-            return 51...80
-        case .Green:
-            return 81...170
-        case .Cyan:
-            return 170...200
-        case .Blue:
-            return 201...240
-        }
-    }
     
     //the colours are changed
     func mergeSimilarColors(tolerance: Int = 1) {
@@ -125,23 +84,5 @@ class PWCColors: NSObject {
             }
         }
         return groupedColors
-    }
-}
-
-enum Color {
-    case Red
-    case Orange
-    case Yellow
-    case Green
-    case Cyan
-    case Blue
-}
-
-extension UIColor {
-    var hsba: (h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat) {
-        var hsba: (h: CGFloat, s: CGFloat, b: CGFloat, a: CGFloat) = (0, 0, 0, 0)
-        self.getHue(&(hsba.h), saturation: &(hsba.s), brightness: &(hsba.b), alpha: &(hsba.a))
-        print(hsba)
-        return hsba
     }
 }

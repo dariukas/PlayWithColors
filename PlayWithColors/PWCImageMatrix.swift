@@ -27,6 +27,9 @@ class PWCImageMatrix: NSObject {
         self.columns = columns
     }
     
+    func indexIsValid(row: Int, column: Int) -> Bool {
+        return row >= 0 && row < rows && column >= 0 && column < columns
+    }
     
     //the singular matrices are not covered
     subscript(row: Int, col: Int) -> UIColor {

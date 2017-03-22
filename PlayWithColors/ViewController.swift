@@ -25,10 +25,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //run()
-        let a: PWCColorObjectDetector =  PWCColorObjectDetector()
-        
-        a.detect()
+        run()
+//        let a: PWCColorObjectDetector =  PWCColorObjectDetector()
+//        a.detect()
         
 //        var colours: [[Int]] = [[0, 0, 0], [0, 0, 0], [10, 10, 9]]
 //        colours = replaceColor(colour: [0, 0, 0, 0], in: colours)
@@ -69,84 +68,18 @@ class ViewController: UIViewController {
     }
     
     func runMain(_ data: Data?) {
-        if let img = UIImage(data: data!), let cgImage = cgImageFromUIImage(img) {
-            //let color: UIColor = averageColor(cgImage: cgImage!)
-            //print(color)
+        if let img = PWCImage(data: data!) {
             //self.view.backgroundColor = color
-            findTheColors(cgImage: cgImage)
+           print(img.imageToImageMatrix())
+            //draw(UIImage(cgImage: cgImage), with: CGSize(width: dimension, height: dimension))
         }
     }
-
-    func cgImageFromUIImage(_ uiImage: UIImage) -> CGImage? {
-        if let ciImage = CIImage(image: uiImage), let cgImage = CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent) {
-            return cgImage
-        }
-        return nil
-    }
-    
-    func averageColor(cgImage: CGImage) -> UIColor {
-        
-        let rgba = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: 4)
-        let colorSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()
-        let info = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
-        let context: CGContext = CGContext(data: rgba, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: info.rawValue)!
-        
-        context.draw(cgImage, in: CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0))
-        //CGContextDrawImage(context, CGRectMake(0, 0, 1, 1), cgImage)
-        
-        if rgba[3] > 0 {
-            
-            let alpha: CGFloat = CGFloat(rgba[3]) / 255.0
-            let multiplier: CGFloat = alpha / 255.0
-            
-            return UIColor(red: CGFloat(rgba[0]) * multiplier, green: CGFloat(rgba[1]) * multiplier, blue: CGFloat(rgba[2]) * multiplier, alpha: alpha)
-            
-        } else {
-            
-            return UIColor(red: CGFloat(rgba[0]) / 255.0, green: CGFloat(rgba[1]) / 255.0, blue: CGFloat(rgba[2]) / 255.0, alpha: CGFloat(rgba[3]) / 255.0)
-        }
-    }
-    
-    func findTheColors(cgImage: CGImage) {
-        let dimension: Int = 100
-        let rgba = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: 4*dimension*dimension)
-        let colorSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()
-        let info = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue)
-        let context: CGContext = CGContext(data: rgba, width: dimension, height: dimension, bitsPerComponent: 8, bytesPerRow: 400, space: colorSpace, bitmapInfo: info.rawValue)!
-        
-        context.draw(cgImage, in: CGRect(x: 0.0, y: 0.0, width: Double(dimension), height: Double(dimension)))
-        var colours: [Any] = []
-
-       // let colour: UIColor = UIColor(red: CGFloat(rgba[404])/255, green: CGFloat(rgba[405])/255, blue: CGFloat(rgba[406])/255, alpha: CGFloat(rgba[index+3])/255)
-        
-        for index1 in 0..<dimension {
-            for index2 in 0..<dimension {
-                let index = 4*(index1*dimension + index2)
-                let colour: UIColor = UIColor(red: CGFloat(rgba[index])/255, green: CGFloat(rgba[index+1])/255, blue: CGFloat(rgba[index+2])/255, alpha: CGFloat(rgba[index+3])/255)
-                colours.append(colour)
-            }
-        }
-        //print(colours)
-        
-        
-        //check for empty image
-        guard colours.count>1 else {
-            return
-        }
-        
-//        if var colours1 = colours as? [UIColor] {
-//            addLabels(findTheMainColours(colours: colours1))
-//        }
-        
-        draw(UIImage(cgImage: cgImage), with: CGSize(width: dimension, height: dimension))
-    }
-    
-    
+ 
     func draw(_ image: UIImage, with size: CGSize) {
         UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
         if let context = UIGraphicsGetCurrentContext() {
             //image.draw(at: CGPoint.zero)
-            context.draw(cgImageFromUIImage(image)!, in: CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0))
+            context.draw(image.cgImage!, in: CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0))
             let rectangle = CGRect(x: 0, y: 0, width: 20, height: 20)
             context.setStrokeColor(UIColor.black.cgColor)
             context.setLineWidth(2)

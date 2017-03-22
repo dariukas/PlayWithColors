@@ -54,6 +54,15 @@ class PWCImage: UIImage {
         return PWCImageMatrix.init(colours, rows: dimension, columns: dimension)
     }
     
+    func imageToImageMatrix() -> PWCImageMatrix {
+        let colours: [UIColor] = findColors()
+        //check for empty image
+        guard colours.count>1 else {
+            return PWCImageMatrix.init(rows: dimension, columns: dimension)
+        }
+        return PWCImageMatrix.init(colours, rows: dimension, columns: dimension)
+    }
+    
     internal func getAverageColorData() -> UnsafeMutablePointer<CUnsignedChar> {
         let rgba = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: 4)
         let colorSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()

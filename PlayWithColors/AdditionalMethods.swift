@@ -10,6 +10,13 @@ import UIKit
 
 class AlternativeMethods: NSObject {
     
+    func cgImageFromUIImage(_ uiImage: UIImage) -> CGImage? {
+        if let ciImage = CIImage(image: uiImage), let cgImage = CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent) {
+            return cgImage
+        }
+        return nil
+    }
+    
     func findTheColors(cgImage: CGImage) {
         let dimension: Int = 100
         let rgba = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: 4*dimension*dimension)
@@ -18,6 +25,8 @@ class AlternativeMethods: NSObject {
         let context: CGContext = CGContext(data: rgba, width: dimension, height: dimension, bitsPerComponent: 8, bytesPerRow: 400, space: colorSpace, bitmapInfo: info.rawValue)!
         
         context.draw(cgImage, in: CGRect(x: 0.0, y: 0.0, width: Double(dimension), height: Double(dimension)))
+        //CGContextDrawImage(context, CGRectMake(0, 0, 1, 1), cgImage)
+        
         var colours: [Any] = []
         
         for index1 in 0..<dimension {
@@ -31,16 +40,12 @@ class AlternativeMethods: NSObject {
                 colours.append(color)
             }
         }
-        //print(colours)
-        
         //check for empty image
         guard colours.count>1 else {
             return
         }
-        
         if let colours1 = colours as? [[Int]] {
-            //  print(findTheMainColours(colours: colours1))
-            //   print("next: \(groupColors(colours1))")
+            print(findTheMainColours(colours: colours1))
         }
     }
     

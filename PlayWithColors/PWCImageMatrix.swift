@@ -27,6 +27,8 @@ class PWCImageMatrix: NSObject {
         self.columns = columns
     }
     
+    
+    //the singular matrices are not covered
     subscript(row: Int, col: Int) -> UIColor {
         get {
             return data[(row * columns) + col]

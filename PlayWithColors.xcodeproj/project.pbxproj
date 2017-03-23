@@ -18,7 +18,6 @@
 		A35BAC971E83372D004B9310 /* PWCColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35BAC961E83372D004B9310 /* PWCColor.swift */; };
 		A3CE6B1D1E7ACFBB007209FE /* ColoursMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CE6B1C1E7ACFBB007209FE /* ColoursMatrix.swift */; };
 		A3D8A75A1E81534900EDDD04 /* PWCColorObjectDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D8A7591E81534900EDDD04 /* PWCColorObjectDetector.swift */; };
-		A3E99C371E80742D0001DFAA /* MyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E99C361E80742D0001DFAA /* MyView.swift */; };
 		A3E99C391E8097D80001DFAA /* PWCImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E99C381E8097D80001DFAA /* PWCImage.swift */; };
 		A3E99C3B1E80A1870001DFAA /* PWCImageMatrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E99C3A1E80A1870001DFAA /* PWCImageMatrix.swift */; };
 		A3E99C3D1E80A6520001DFAA /* PWCColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E99C3C1E80A6520001DFAA /* PWCColors.swift */; };
@@ -50,7 +49,6 @@
 		A35BAC961E83372D004B9310 /* PWCColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWCColor.swift; sourceTree = "<group>"; };
 		A3CE6B1C1E7ACFBB007209FE /* ColoursMatrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColoursMatrix.swift; sourceTree = "<group>"; };
 		A3D8A7591E81534900EDDD04 /* PWCColorObjectDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWCColorObjectDetector.swift; sourceTree = "<group>"; };
-		A3E99C361E80742D0001DFAA /* MyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyView.swift; sourceTree = "<group>"; };
 		A3E99C381E8097D80001DFAA /* PWCImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWCImage.swift; sourceTree = "<group>"; };
 		A3E99C3A1E80A1870001DFAA /* PWCImageMatrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWCImageMatrix.swift; sourceTree = "<group>"; };
 		A3E99C3C1E80A6520001DFAA /* PWCColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PWCColors.swift; sourceTree = "<group>"; };
@@ -98,7 +96,6 @@
 				A35086BE1E78828200311A8E /* AppDelegate.swift */,
 				A35086C01E78828200311A8E /* ViewController.swift */,
 				A3D8A7591E81534900EDDD04 /* PWCColorObjectDetector.swift */,
-				A3E99C361E80742D0001DFAA /* MyView.swift */,
 				A3E99C381E8097D80001DFAA /* PWCImage.swift */,
 				A3E99C3C1E80A6520001DFAA /* PWCColors.swift */,
 				A35BAC961E83372D004B9310 /* PWCColor.swift */,
@@ -226,7 +223,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A3E99C371E80742D0001DFAA /* MyView.swift in Sources */,
 				A3E99C3B1E80A1870001DFAA /* PWCImageMatrix.swift in Sources */,
 				A3CE6B1D1E7ACFBB007209FE /* ColoursMatrix.swift in Sources */,
 				A3D8A75A1E81534900EDDD04 /* PWCColorObjectDetector.swift in Sources */,
